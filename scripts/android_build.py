@@ -1,10 +1,10 @@
 # Copyright (c) 2026 Muhammad Waleed Badar
 # SPDX-License-Identifier: GPL-3.0-only
-"""west build --arch: cross-compile native_sim for another architecture.
+"""west build for native_sim/native/aarch64: build in the Debian image.
 
-Zephyr's "build" command cannot be replaced by an extension, so this one is
-reached through the alias "west config alias.build arch-build". Without --arch
-it behaves exactly like the original.
+"-t run" then runs the result on the phone. Other boards behave exactly as with
+the original command. Zephyr's "build" command cannot be replaced by an extension,
+so this one is reached through the alias "west config alias.build android-build".
 """
 
 import configparser
@@ -19,54 +19,55 @@ from west.util import west_topdir
 sys.path.insert(0, str(Path(west_topdir()) / 'zephyr/scripts/west_commands'))
 from build import Build  # noqa: E402
 
-IMAGE = 'zephyr-pixel-cross'
-BOARD = 'native_sim/native/64'
+IMAGE = 'zephyr-android-cross'
+BOARD = 'native_sim/native/aarch64'
 PROJECT = Path(__file__).resolve().parent.parent
-# Target architectures with a toolchain in the image
-TOOLCHAINS = {'aarch64': '/usr/bin/aarch64-linux-gnu-'}
+ANDROID_RUN = 'boards/native/native_sim_aarch64/android_run.py'
+BUILD_DIR = 'build'
 
 
 def inner_args():
-    """The user's "west build" arguments without --arch."""
+    """The user's "west build" arguments without "-t run", which is done out here."""
     argv = sys.argv[1:]
-    start = next(i for i, arg in enumerate(argv) if arg in ('build', 'arch-build'))
+    start = next(i for i, arg in enumerate(argv) if arg in ('build', 'android-build'))
     args = iter(argv[start + 1:])
     kept = []
     for arg in args:
         if arg == '--':
             kept += [arg, *args]
-        elif arg == '--arch':
-            next(args, '')
-        elif not arg.startswith('--arch='):
+        elif arg in ('-t', '--target'):
+            target = next(args, '')
+            if target != 'run':
+                kept += [arg, target]
+        elif arg not in ('-trun', '--target=run'):
             kept.append(arg)
     return kept
 
 
-class ArchBuild(Build):
+class AndroidBuild(Build):
     def __init__(self):
         super().__init__()
-        self.name = 'arch-build'
-
-    def do_add_parser(self, parser_adder):
-        parser = super().do_add_parser(parser_adder)
-        parser.add_argument('--arch', choices=sorted(TOOLCHAINS),
-                            help='cross-compile native_sim for this architecture '
-                                 'instead of the host one. The binary is dynamically '
-                                 'linked against Debian 13 glibc. Build directory '
-                                 'defaults to build-<arch>')
-        return parser
+        self.name = 'android-build'
 
     def do_run(self, args, remainder):
-        if not args.arch:
+        if (args.board or self.cached(args, 'CACHED_BOARD')) != BOARD:
             super().do_run(args, remainder)
             return
 
-        if args.board and args.board != BOARD:
-            self.die(f'--arch needs -b {BOARD}, not {args.board}')
+        build = Path(args.build_dir or BUILD_DIR).resolve()
+        self.cross_build(args, remainder, build)
         if args.target == 'run':
-            self.die('-t run cannot start a binary for another architecture; '
-                     'copy zephyr/zephyr.exe to the target')
-        self.cross_build(args, remainder)
+            exe = build / 'zephyr/zephyr.exe'
+            sys.exit(subprocess.run([sys.executable, PROJECT / ANDROID_RUN, exe]).returncode)
+
+    def cached(self, args, name):
+        """A value from an existing build, or None."""
+        cache = Path(args.build_dir or BUILD_DIR) / 'CMakeCache.txt'
+        if cache.exists():
+            for line in cache.read_text().splitlines():
+                if line.startswith(f'{name}:'):
+                    return line.split('=', 1)[1]
+        return None
 
     def mounts(self, source):
         top = Path(west_topdir()).resolve()
@@ -80,7 +81,7 @@ class ArchBuild(Build):
             paths.add(Path(git.stdout.strip() if git.returncode == 0 else source).resolve())
         return sorted(str(p) for p in paths if p.exists())
 
-    def cross_build(self, args, remainder):
+    def cross_build(self, args, remainder, build):
         top = Path(west_topdir()).resolve()
         if subprocess.run(['podman', 'image', 'exists', IMAGE]).returncode:
             log.banner(f'building the {IMAGE} image, this happens once')
@@ -88,33 +89,25 @@ class ArchBuild(Build):
                             str(PROJECT / 'docker/Containerfile'),
                             str(top / 'zephyr/scripts')], check=True)
 
-        default_dir = f'build-{args.arch}'
-        build = Path(args.build_dir or default_dir).resolve()
         build.mkdir(parents=True, exist_ok=True)
-
-        user_args = inner_args()
         west = ['west', 'build']
         if not args.build_dir:
-            west += ['-d', default_dir]
-        if not args.board:
-            west += ['-b', BOARD]
-        west += user_args
-        if '--' not in user_args:
-            west.append('--')
-        west += [f'-DNATIVE_TARGET_HOST={args.arch}',
-                 '-DZEPHYR_TOOLCHAIN_VARIANT=cross-compile',
-                 f'-DCROSS_COMPILE={TOOLCHAINS[args.arch]}']
+            west += ['-d', BUILD_DIR]
+        west += inner_args()
 
         source = remainder[0] if remainder and remainder[0] != '--' else args.source_dir
+        source = source or self.cached(args, 'CMAKE_HOME_DIRECTORY')
         # Sources are read-only and keep their real paths in the container
         volumes = [a for m in self.mounts(source) for a in ('-v', f'{m}:{m}:ro')]
         volumes += ['-v', f'{build}:{build}']
 
-        # build.cmake-args describes the host, and would override the defines above
+        # build.cmake-args describes the host, and the alias would bring the
+        # container back here
         config = configparser.ConfigParser(interpolation=None)
         config.read(top / '.west/config')
         if config.has_section('build'):
             config.remove_option('build', 'cmake-args')
+        config.remove_section('alias')
         with tempfile.NamedTemporaryFile('w') as west_config:
             config.write(west_config)
             west_config.flush()

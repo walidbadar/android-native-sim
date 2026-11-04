@@ -1,0 +1,5 @@
+board:
+  extend: native_sim
+  variants:
+    - name: aarch64
+      qualifier: native

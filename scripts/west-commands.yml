@@ -1,6 +1,6 @@
 west-commands:
-  - file: scripts/arch_build.py
+  - file: scripts/android_build.py
     commands:
-      - name: arch-build
-        class: ArchBuild
-        help: west build with --arch, see "west config alias.build"
+      - name: android-build
+        class: AndroidBuild
+        help: west build for native_sim/native/aarch64, see "west config alias.build"

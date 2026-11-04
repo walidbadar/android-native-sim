@@ -1,0 +1,5 @@
+name: android-native-sim
+build:
+  settings:
+    board_root: .
+    module_ext_root: .
