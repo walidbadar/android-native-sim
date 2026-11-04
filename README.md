@@ -1,8 +1,11 @@
 # Zephyr native_sim on Android
 
-Build a Zephyr `native_sim` application for arm64 on a Linux machine and run it
-on an Android phone, using one board and one command. The phone needs no root and
-no bootloader unlock.
+<p align="center">
+  <img src="docs/logo.svg" alt="The Android robot holding the Zephyr kite" width="240">
+</p>
+
+Build a Zephyr `native_sim` application for arm64 and run it on an Android phone.
+The phone needs no root and no bootloader unlock.
 
 ```bash
 west build -b native_sim/native/aarch64 -t run <application>
@@ -122,19 +125,15 @@ west build -b native_sim/native/aarch64 -t run zephyr/samples/subsys/display/lvg
 This starts the display and opens Termux:X11. The console stays in your terminal,
 and Ctrl-C stops the application.
 
-## Troubleshooting
-
-| Problem | Fix |
-| --- | --- |
-| `unknown command "android-build"` | `zephyr/submanifests/android.yaml` is missing, as `git clean` removes it. Add it again, or run `west config -d alias.build` to build other boards |
-| `gcc has no libgcc_eh.a` | `west build` isn't using the cross image. Run `west config alias.build android-build` |
-| `Cannot find the phone's address` | Connect the phone to adb and Wi-Fi, or set `CONFIG_ANDROID_PHONE_IP` |
-| `adb cannot reach` | Run `adb tcpip 5555` with the phone on USB |
-| `no SSH to` | Start `sshd` in Termux |
-| `no devices/emulators found` | Check USB debugging and `adb devices` |
-| Black screen | Unlock the phone and open Termux:X11 |
-
 ## References
 
 - [Native simulator (native_sim)](https://docs.zephyrproject.org/latest/boards/native/native_sim/doc/index.html)
 - [Cross-compiling the POSIX architecture](https://docs.zephyrproject.org/latest/boards/native/native_sim/doc/cross_compile.html)
+
+## Logo
+
+The Android robot is reproduced or modified from work created and shared by
+Google and used according to terms described in the Creative Commons 3.0
+Attribution License. The kite is taken from the Zephyr Project logo. Zephyr is a
+trademark of the Linux Foundation. This project is not affiliated with or
+endorsed by Google or the Linux Foundation.

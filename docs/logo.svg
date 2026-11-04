@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -19 1024 1024" width="1024" height="1024" role="img" aria-labelledby="t d">
+  <title id="t">android-native-sim logo</title>
+  <desc id="d">The Android robot holding the Zephyr kite overhead. The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License. The Zephyr kite is taken from the Zephyr Project logo; Zephyr is a trademark of the Linux Foundation. This project is not affiliated with or endorsed by Google or the Linux Foundation.</desc>
+  <defs>
+    <linearGradient id="k1" x1="173.22662" y1="83.04115" x2="269.62072" y2="83.04115" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#7929d2"/><stop offset="1" stop-color="#0070c5"/></linearGradient>
+    <linearGradient id="k2" x1="179.78727" y1="-1.87884" x2="178.97991" y2="93.40757" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#00aeff"/><stop offset="1" stop-color="#9454db"/></linearGradient>
+    <linearGradient id="k3" x1="232.84549" y1="37.63202" x2="212.26581" y2="1.98698" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#66a9dc"/><stop offset="1" stop-color="#b1e4fa"/></linearGradient>
+    <linearGradient id="k4" x1="237.42321" y1="9.70268" x2="249.11587" y2="90.57694" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#00aeff"/><stop offset="1" stop-color="#9454db"/></linearGradient>
+  </defs>
+  <g id="zephyr-kite" transform="translate(132 -12) scale(2.75) rotate(9 133.7 80)">
+    <polygon fill="#7929d2" points="137.154 121.601 105.31 135.046 132.385 148.72"/>
+    <polygon fill="#9454db" points="68.401 139.419 34.434 126.703 42.309 153.408"/>
+    <polygon fill="#af7fe4" points="84.508 115.518 105.31 135.046 68.401 139.419"/>
+    <polygon fill="#af7fe4" points="38.535 97.167 34.434 126.703 8.759 101.076"/>
+    <polygon fill="url(#k1)" points="137.154 121.601 220.982 44.482 258.666 94.416"/>
+    <polygon fill="url(#k2)" points="137.154 121.601 172.959 8.13 220.982 44.482"/>
+    <polygon fill="url(#k3)" points="172.959 8.13 258.666 8.13 220.982 44.482"/>
+    <polygon fill="url(#k4)" points="258.666 94.416 258.666 8.13 220.982 44.482"/>
+  </g>
+  <g id="android-robot" fill="#3DDC84" stroke="#3DDC84" stroke-linecap="round">
+    <g stroke-width="16" fill="none">
+      <line x1="430" y1="455" x2="396" y2="398"/>
+      <line x1="594" y1="455" x2="628" y2="398"/>
+    </g>
+    <path stroke="none" d="M342 590a170 170 0 0 1 340 0z"/>
+    <path stroke="none" d="M342 604h340v202a36 36 0 0 1 -36 36h-268a36 36 0 0 1 -36 -36z"/>
+    <g stroke-width="82">
+      <line x1="434" y1="832" x2="434" y2="916"/>
+      <line x1="590" y1="832" x2="590" y2="916"/>
+      <line x1="287.0" y1="650.0" x2="211.8" y2="396.3"/>
+      <line x1="737.0" y1="650.0" x2="752.5" y2="339.9"/>
+    </g>
+  </g>
+  <g id="eyes" fill="#fff">
+    <circle cx="442" cy="516" r="15"/>
+    <circle cx="582" cy="516" r="15"/>
+  </g>
+</svg>
