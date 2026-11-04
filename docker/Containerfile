@@ -1,0 +1,14 @@
+# aarch64 cross toolchain on Debian 13, the same glibc as Debian on the phone.
+FROM docker.io/library/debian:trixie
+ENV DEBIAN_FRONTEND=noninteractive
+RUN dpkg --add-architecture arm64 && apt-get update \
+    && apt-get install -y --no-install-recommends \
+      ca-certificates git cmake ninja-build gperf device-tree-compiler make file xz-utils \
+      python3 python3-venv python3-pip pkg-config protobuf-compiler \
+      gcc-aarch64-linux-gnu g++-aarch64-linux-gnu libc6-dev-arm64-cross libsdl2-dev:arm64 \
+    && rm -rf /var/lib/apt/lists/*
+COPY requirements-base.txt /tmp/
+RUN python3 -m venv /opt/venv \
+    && /opt/venv/bin/pip install --no-cache-dir -r /tmp/requirements-base.txt protobuf grpcio-tools
+ENV PATH=/opt/venv/bin:$PATH \
+    PKG_CONFIG_LIBDIR=/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/share/pkgconfig

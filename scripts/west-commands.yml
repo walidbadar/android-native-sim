@@ -1,0 +1,6 @@
+west-commands:
+  - file: scripts/arch_build.py
+    commands:
+      - name: arch-build
+        class: ArchBuild
+        help: west build with --arch, see "west config alias.build"
