@@ -1,13 +1,43 @@
-# Copyright (c) 2026 Muhammad Waleed Badar
+# SPDX-FileCopyrightText: 2026 Muhammad Waleed Badar
 # SPDX-License-Identifier: Apache-2.0
 
 config GNSS_NATIVE_SIM
-	bool "native_sim GNSS driver"
+	bool "native_sim GNSS receiver"
 	default y
-	depends on GNSS
 	depends on DT_HAS_ZEPHYR_NATIVE_SIM_GNSS_ENABLED
-	depends on BOARD_NATIVE_SIM
+	depends on ARCH_POSIX
+	select NATIVE_SIMULATOR_PREFER_REAL_TIME
 	help
 	  GNSS receiver for native_sim that reports a position taken from the
-	  host: an Android phone's location (through dumpsys, directly or over
-	  adb) or a fixed position given on the command line.
+	  host: an Android phone's location, read with dumpsys directly or
+	  through adb, or a fixed position given on the command line.
+
+if GNSS_NATIVE_SIM
+
+config GNSS_NATIVE_SIM_FIX_INTERVAL_MS
+	int "Fix interval at power on (ms)"
+	default 1000
+	range 100 60000
+	help
+	  How often a fix is published until the application sets the fix
+	  rate through the GNSS API.
+
+config GNSS_NATIVE_SIM_POLL_PERIOD_MS
+	int "Host location poll period (ms)"
+	default 1000
+	range 100 60000
+	help
+	  Real time between reads of the host location. dumpsys takes a
+	  noticeable time, through adb even more, so this is not the fix
+	  interval: each fix publishes the newest position read.
+
+config GNSS_NATIVE_SIM_MAX_FIX_AGE_MS
+	int "Oldest host fix reported (ms)"
+	default 10000
+	range 0 3600000
+	help
+	  A host fix older than this is reported as no fix. Android only
+	  updates its location while some app requests it, so this is what
+	  tells a live position from a stale one. 0 reports a fix of any age.
+
+endif # GNSS_NATIVE_SIM

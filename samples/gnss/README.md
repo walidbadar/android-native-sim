@@ -2,8 +2,8 @@
 
 Prints each fix from the `zephyr,native-sim-gnss` driver. `src/main.c` and
 `prj.conf` are portable: any board with a `gnss` alias on a GNSS device builds
-them. `boards/native_sim_native_64.overlay` adds the native_sim receiver, and
-this module applies it to `native_sim/native/aarch64` too.
+them. `boards/native_sim_native_64.overlay` adds the native_sim receiver as
+`gnss_host`, and this module applies it to `native_sim/native/aarch64` too.
 
 ## The driver
 
@@ -12,22 +12,22 @@ this module applies it to `native_sim/native/aarch64` too.
   `gnss_stop`, `gnss_set_fix_rate` and `gnss_get_fix_rate`, and starts
   streaming at boot, like the NMEA receivers. One instance is supported, since
   there is one host location.
-- `drivers/gnss/gnss_native_sim_bottom.c`, the host side, polls the phone once
-  a second on a host thread, so a slow `dumpsys` or adb call never stalls the
-  simulation.
-- `tests/drivers/gnss/native_sim` tests it with a fixed position.
+- `drivers/gnss/gnss_native_sim_bottom.c`, the host side, polls the phone every
+  `CONFIG_GNSS_NATIVE_SIM_POLL_PERIOD_MS` (1 s) on a host thread, so a slow
+  `dumpsys` or adb call never stalls the simulation.
 
 The location comes from `dumpsys location`, run directly when the executable
 is on the phone as the adb shell user, and through adb otherwise. With several
-devices on adb, choose one with `ANDROID_SERIAL`. `-gnss_position=<lat>,<lon>[,<alt>]`
-(degrees, metres above sea level) reports a fixed position instead.
+devices on adb, choose one with `ANDROID_SERIAL`.
+`--gnss_host_position=<lat>,<lon>[,<alt>]` (degrees, metres above sea level)
+reports a fixed position instead.
 
 ## On the laptop
 
 ```bash
 west build -b native_sim/native/64 android-native-sim/samples/gnss
 build/zephyr/zephyr.exe
-build/zephyr/zephyr.exe -gnss_position=52.370216,4.895168,12
+build/zephyr/zephyr.exe --gnss_host_position=52.370216,4.895168,12
 ```
 
 ## On the phone
@@ -68,7 +68,8 @@ a location it publishes "no fix" and warns once.
 `dumpsys location` reports the last fix each provider delivered, which only
 updates while some app on the phone is requesting location. Open Maps or any
 navigation app on the phone to get a live GPS track; with nothing requesting
-location the position stays at the last known one. Android does not expose the
-satellite count or HDOP in that dump, so a GNSS fix reports 8 satellites and the
-HDOP is the horizontal accuracy divided by 5 m (at least 0.5). The UTC time is
-the host's clock when the fix is published.
+location the fix grows old, and once older than
+`CONFIG_GNSS_NATIVE_SIM_MAX_FIX_AGE_MS` (10 s) the driver reports no fix.
+Android does not expose the satellites or HDOP of a fix in that dump, so no
+satellites are reported and the HDOP is the horizontal accuracy divided by 5 m
+(at least 0.5). The UTC time is the host's clock when the fix is published.

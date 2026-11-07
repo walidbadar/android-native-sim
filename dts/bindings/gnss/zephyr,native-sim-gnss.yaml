@@ -1,15 +1,37 @@
-# Copyright (c) 2026 Muhammad Waleed Badar
+# SPDX-FileCopyrightText: 2026 Muhammad Waleed Badar
 # SPDX-License-Identifier: Apache-2.0
+
+title: native_sim GNSS receiver
 
 description: |
   GNSS receiver for native_sim, fed by a location source on the host.
 
-  The source is chosen on the command line: -gnss_position=<lat>,<lon>[,<alt>]
-  reports a fixed position, otherwise the location of an Android phone is
-  read with "dumpsys location", directly when the executable runs on the
-  phone as the adb shell user, or through adb otherwise (ANDROID_SERIAL
-  selects the device when more than one is connected).
+  By default the location of an Android phone is read with "dumpsys location":
+  directly when the executable runs on the phone as the adb shell user, and
+  through adb otherwise (ANDROID_SERIAL selects the device when several are
+  connected). The --<node name>_position=<lat>,<lon>[,<alt>] command line
+  option reports that fixed position instead, without a phone.
+
+  The fix rate set through the GNSS API only changes how often the newest
+  position is published; the host is read every
+  CONFIG_GNSS_NATIVE_SIM_POLL_PERIOD_MS. A host fix older than
+  CONFIG_GNSS_NATIVE_SIM_MAX_FIX_AGE_MS is reported as no fix. Every start mode
+  is accepted and makes no difference. Android does not say which satellites a
+  fix used, so none are reported, and the HDOP is derived from the horizontal
+  accuracy.
 
 compatible: "zephyr,native-sim-gnss"
 
 include: base.yaml
+
+examples:
+  - |
+      / {
+          aliases {
+              gnss = &gnss_host;
+          };
+
+          gnss_host: gnss_host {
+              compatible = "zephyr,native-sim-gnss";
+          };
+      };
