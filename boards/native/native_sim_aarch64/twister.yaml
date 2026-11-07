@@ -1,0 +1,13 @@
+# This board extends native_sim, whose own twister.yaml holds the common
+# data, so an extension may only add variant data here.
+variants:
+  native_sim/native/aarch64:
+    name: Native Simulation port - aarch64 on Android
+    type: native
+    arch: posix
+    ram: 65536
+    flash: 65536
+    toolchain:
+      - cross-compile
+    testing:
+      default: false
