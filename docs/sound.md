@@ -10,7 +10,7 @@ such as one using `CONFIG_I2S_NATIVE_SIM_ALSA`, reaches the speaker through
 PulseAudio in Termux. This covers playback only.
 
 This builds on the Termux and Debian setup from
-[Applications with a screen](display.md). Set up the phone once, in Termux:
+[Applications with a display](display.md). Set up the phone once, in Termux:
 
 ```bash
 pkg install pulseaudio

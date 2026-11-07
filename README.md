@@ -14,10 +14,9 @@ west build -b native_sim/native/aarch64 -t run zephyr/samples/hello_world
 **Documentation: <https://walidbadar.github.io/android-native-sim/>**
 
 - [Setup](https://walidbadar.github.io/android-native-sim/setup.html)
-- [Applications without a screen](https://walidbadar.github.io/android-native-sim/headless.html)
-- [Applications with a screen](https://walidbadar.github.io/android-native-sim/display.html)
+- [Applications without a display](https://walidbadar.github.io/android-native-sim/headless.html)
+- [Applications with a display](https://walidbadar.github.io/android-native-sim/display.html)
 - [Sound](https://walidbadar.github.io/android-native-sim/sound.html)
-- [Location](https://walidbadar.github.io/android-native-sim/location.html)
 - [Troubleshooting](https://walidbadar.github.io/android-native-sim/troubleshooting.html)
 
 ## Logo

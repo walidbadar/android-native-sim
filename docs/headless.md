@@ -1,9 +1,9 @@
 ---
-title: Without a screen
+title: Without a display
 nav_order: 3
 ---
 
-# Applications without a screen
+# Applications without a display
 
 ```bash
 west build -b native_sim/native/aarch64 -t run zephyr/samples/hello_world

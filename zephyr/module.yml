@@ -1,8 +1,5 @@
 name: android-native-sim
 build:
-  cmake: .
-  kconfig: Kconfig
   settings:
     board_root: .
-    dts_root: .
     module_ext_root: .

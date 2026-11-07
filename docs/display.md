@@ -1,9 +1,9 @@
 ---
-title: With a screen
+title: With a display
 nav_order: 4
 ---
 
-# Applications with a screen
+# Applications with a display
 
 These draw through SDL, which needs Debian for its libraries and Termux:X11 for
 the window. Set up the phone once:

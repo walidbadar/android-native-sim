@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """Run a native_sim binary on an Android phone.
 
-An application with a screen runs in Debian in Termux, over SSH, and draws in
+An application with a display runs in Debian in Termux, over SSH, and draws in
 Termux:X11. Any other application runs from the adb shell.
 """
 
@@ -103,8 +103,8 @@ def run_termux(exe, ip):
 
 def main():
     exe = Path(sys.argv[1])
-    ip, screen = read_config(exe)
-    return run_termux(exe, ip) if screen else run_adb(exe, ip)
+    ip, display = read_config(exe)
+    return run_termux(exe, ip) if display else run_adb(exe, ip)
 
 
 if __name__ == '__main__':

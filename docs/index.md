@@ -19,11 +19,10 @@ west build -b native_sim/native/aarch64 -t run <application>
 
 | Application | Runs through | Needs on the phone |
 | --- | --- | --- |
-| [Without a screen](headless.md) | adb | USB debugging |
-| [With a screen](display.md), such as LVGL | SSH to Termux | Wi-Fi, Termux, Debian and Termux:X11 |
+| [Without a display](headless.md) | adb | USB debugging |
+| [With a display](display.md), such as LVGL | SSH to Termux | Wi-Fi, Termux, Debian and Termux:X11 |
 
-Applications can also play [sound](sound.md) and read the phone's
-[location](location.md).
+Applications can also play [sound](sound.md).
 
 Tested on a Pixel 3 with Android 12 and Zephyr `v4.5.0-1406-gdecee24b4fb`.
 

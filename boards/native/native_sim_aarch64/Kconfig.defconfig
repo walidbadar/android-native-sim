@@ -4,7 +4,7 @@
 if BOARD_NATIVE_SIM_NATIVE_AARCH64
 
 # Android's linker refuses glibc binaries, a static one never reaches it. SDL
-# cannot link statically, so an application with a screen runs in Debian instead.
+# cannot link statically, so an application with a display runs in Debian instead.
 config NATIVE_SIMULATOR_STATIC_LINKING
 	default y if !SDL_DISPLAY
 

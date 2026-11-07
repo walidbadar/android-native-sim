@@ -9,5 +9,5 @@ config ANDROID_PHONE_IP
 	depends on BOARD_NATIVE_SIM_NATIVE_AARCH64
 	help
 	  Where "west build -t run" finds the phone. When it is empty, adb uses the
-	  phone it already sees, and an application with a screen asks adb for the
+	  phone it already sees, and an application with a display asks adb for the
 	  address to reach Termux over SSH. When it is set, adb connects to it.
