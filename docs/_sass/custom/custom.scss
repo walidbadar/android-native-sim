@@ -1,0 +1,6 @@
+// The site title wraps on narrow screens; let the header grow with it instead
+// of clipping it to the theme's fixed header height.
+.site-header {
+  height: auto;
+  max-height: none;
+}
