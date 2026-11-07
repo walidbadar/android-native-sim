@@ -1,0 +1,15 @@
+# Copyright (c) 2026 Muhammad Waleed Badar
+# SPDX-License-Identifier: Apache-2.0
+
+description: |
+  GNSS receiver for native_sim, fed by a location source on the host.
+
+  The source is chosen on the command line: -gnss_position=<lat>,<lon>[,<alt>]
+  reports a fixed position, otherwise the location of an Android phone is
+  read with "dumpsys location", directly when the executable runs on the
+  phone as the adb shell user, or through adb otherwise (ANDROID_SERIAL
+  selects the device when more than one is connected).
+
+compatible: "zephyr,native-sim-gnss"
+
+include: base.yaml

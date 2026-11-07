@@ -1,0 +1,15 @@
+/*
+ * Copyright (c) 2026 Muhammad Waleed Badar
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/ {
+	aliases {
+		gnss = &gnss;
+	};
+
+	gnss: gnss {
+		compatible = "zephyr,native-sim-gnss";
+		status = "okay";
+	};
+};

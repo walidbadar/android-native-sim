@@ -1,0 +1,13 @@
+# Copyright (c) 2026 Muhammad Waleed Badar
+# SPDX-License-Identifier: Apache-2.0
+
+config GNSS_NATIVE_SIM
+	bool "native_sim GNSS driver"
+	default y
+	depends on GNSS
+	depends on DT_HAS_ZEPHYR_NATIVE_SIM_GNSS_ENABLED
+	depends on BOARD_NATIVE_SIM
+	help
+	  GNSS receiver for native_sim that reports a position taken from the
+	  host: an Android phone's location (through dumpsys, directly or over
+	  adb) or a fixed position given on the command line.
